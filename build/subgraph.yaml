@@ -1,6 +1,6 @@
 specVersion: 0.0.2
 schema:
-  file: ./schema.graphql
+  file: schema.graphql
 dataSources:
   - kind: ethereum/contract
     name: OlympusProFactory
@@ -17,14 +17,14 @@ dataSources:
         - Bond
       abis:
         - name: OlympusProFactory
-          file: ./abis/OlympusProFactory.json
+          file: OlympusProFactory/abis/OlympusProFactory.json
         - name: ERC20
-          file: ./abis/ERC20.json
+          file: OlympusProFactory/abis/ERC20.json
         - name: UniswapV2Pair
-          file: ./abis/UniswapV2Pair.json
+          file: OlympusProFactory/abis/UniswapV2Pair.json
       callHandlers:
         - function: createBond(address,address,address,address,uint256[],uint256[])
           handler: createBond
         - function: createBondAndTreasury(address,address,address,uint256[],uint256[])
           handler: createBondAndTreasury
-      file: ./src/OPFactory.ts
+      file: OlympusProFactory/OlympusProFactory.wasm

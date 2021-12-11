@@ -12,7 +12,7 @@ import {
   BigDecimal
 } from "@graphprotocol/graph-ts";
 
-export class ExampleEntity extends Entity {
+export class Bond extends Entity {
   constructor(id: string) {
     super();
     this.set("id", Value.fromString(id));
@@ -20,17 +20,17 @@ export class ExampleEntity extends Entity {
 
   save(): void {
     let id = this.get("id");
-    assert(id !== null, "Cannot save ExampleEntity entity without an ID");
+    assert(id !== null, "Cannot save Bond entity without an ID");
     assert(
       id.kind == ValueKind.STRING,
-      "Cannot save ExampleEntity entity with non-string ID. " +
+      "Cannot save Bond entity with non-string ID. " +
         'Considering using .toHex() to convert the "id" to a string.'
     );
-    store.set("ExampleEntity", id.toString(), this);
+    store.set("Bond", id.toString(), this);
   }
 
-  static load(id: string): ExampleEntity | null {
-    return store.get("ExampleEntity", id) as ExampleEntity | null;
+  static load(id: string): Bond | null {
+    return store.get("Bond", id) as Bond | null;
   }
 
   get id(): string {
@@ -42,21 +42,75 @@ export class ExampleEntity extends Entity {
     this.set("id", Value.fromString(value));
   }
 
-  get block(): Bytes {
-    let value = this.get("block");
-    return value.toBytes();
+  get owner(): string {
+    let value = this.get("owner");
+    return value.toString();
   }
 
-  set block(value: Bytes) {
-    this.set("block", Value.fromBytes(value));
+  set owner(value: string) {
+    this.set("owner", Value.fromString(value));
   }
 
-  get transaction(): Bytes {
-    let value = this.get("transaction");
-    return value.toBytes();
+  get name(): string {
+    let value = this.get("name");
+    return value.toString();
   }
 
-  set transaction(value: Bytes) {
-    this.set("transaction", Value.fromBytes(value));
+  set name(value: string) {
+    this.set("name", Value.fromString(value));
+  }
+
+  get token0(): string {
+    let value = this.get("token0");
+    return value.toString();
+  }
+
+  set token0(value: string) {
+    this.set("token0", Value.fromString(value));
+  }
+
+  get token1(): string {
+    let value = this.get("token1");
+    return value.toString();
+  }
+
+  set token1(value: string) {
+    this.set("token1", Value.fromString(value));
+  }
+
+  get treasury(): string {
+    let value = this.get("treasury");
+    return value.toString();
+  }
+
+  set treasury(value: string) {
+    this.set("treasury", Value.fromString(value));
+  }
+
+  get principleToken(): string {
+    let value = this.get("principleToken");
+    return value.toString();
+  }
+
+  set principleToken(value: string) {
+    this.set("principleToken", Value.fromString(value));
+  }
+
+  get payoutToken(): string {
+    let value = this.get("payoutToken");
+    return value.toString();
+  }
+
+  set payoutToken(value: string) {
+    this.set("payoutToken", Value.fromString(value));
+  }
+
+  get fees(): BigDecimal {
+    let value = this.get("fees");
+    return value.toBigDecimal();
+  }
+
+  set fees(value: BigDecimal) {
+    this.set("fees", Value.fromBigDecimal(value));
   }
 }
