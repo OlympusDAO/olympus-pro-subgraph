@@ -3,7 +3,7 @@ import { UniswapV2Pair } from "../generated/OlympusProFactory/UniswapV2Pair"
 import { ERC20 } from "../generated/OlympusProFactory/ERC20"
 import { Bond } from "../generated/schema"
 import { toDecimal } from "./utils/Decimals"
-import { Address, BigDecimal } from "@graphprotocol/graph-ts"
+import { Address, BigDecimal, log } from "@graphprotocol/graph-ts"
 
 export function createBond(call: CreateBondCall): void {
     initBond(
@@ -43,6 +43,13 @@ function initBond(
     bond.owner = owner
 
     let pair = UniswapV2Pair.bind(Address.fromString(principleToken))
+
+    let tryTokenError = pair.try_token0().reverted || pair.try_token1().reverted
+    if(tryTokenError){
+        log.error("Error bond {} with pair {}", [id, principleToken])
+        return
+    }
+
     bond.token0 = pair.token0().toHexString()
     bond.token1 = pair.token1().toHexString()
 
