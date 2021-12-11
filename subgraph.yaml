@@ -1,22 +1,23 @@
-specVersion: 0.0.1
+specVersion: 0.0.2
 schema:
   file: ./schema.graphql
 dataSources:
   - kind: ethereum/contract
-    name: OlympusProFactory
+    name: OlympusProFactoryStorage
     network: mainnet
     source:
-      address: "0xb1F69deCb09D8490E3872FE26D27a7b83493cd65"
-      abi: OlympusProFactory
+      address: "0x6828D71014D797533C3b49B6990Ca1781656B71f"
+      abi: OlympusProFactoryStorage
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.2
+      apiVersion: 0.0.4
       language: wasm/assemblyscript
       entities:
-
+        - Bond
       abis:
-        - name: OlympusProFactory
-          file: ./abis/OlympusProFactory.json
+        - name: OlympusProFactoryStorage
+          file: ./abis/OlympusProFactoryStorage.json
       eventHandlers:
-
+        - event: BondCreation(address,address,address)
+          handler: createBond
       file: ./src/mapping.ts
