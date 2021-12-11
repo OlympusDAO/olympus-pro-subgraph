@@ -1,0 +1,22 @@
+specVersion: 0.0.1
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum/contract
+    name: OlympusProFactory
+    network: mainnet
+    source:
+      address: "0xb1F69deCb09D8490E3872FE26D27a7b83493cd65"
+      abi: OlympusProFactory
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.2
+      language: wasm/assemblyscript
+      entities:
+
+      abis:
+        - name: OlympusProFactory
+          file: ./abis/OlympusProFactory.json
+      eventHandlers:
+
+      file: ./src/mapping.ts
