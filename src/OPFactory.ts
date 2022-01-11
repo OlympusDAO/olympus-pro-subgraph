@@ -2,6 +2,7 @@ import { CreateBondAndTreasuryCall, CreateBondCall } from "../generated/OlympusP
 import { UniswapV2Pair } from "../generated/OlympusProFactory/UniswapV2Pair"
 import { ERC20 } from "../generated/OlympusProFactory/ERC20"
 import { Bond } from "../generated/schema"
+import { CustomBond } from "../generated/templates"
 import { toDecimal } from "./utils/Decimals"
 import { Address, BigDecimal, log } from "@graphprotocol/graph-ts"
 
@@ -42,20 +43,38 @@ function initBond(
     bond.principleToken = principleToken
     bond.owner = owner
 
-    let pair = UniswapV2Pair.bind(Address.fromString(principleToken))
+    log.debug("Detected bond {} with principle token {}", [id, principleToken])
 
-    let tryTokenError = pair.try_token0().reverted || pair.try_token1().reverted
-    if(tryTokenError){
-        log.error("Error bond {} with pair {}", [id, principleToken])
+    let pair = UniswapV2Pair.bind(Address.fromString(principleToken))
+    let tryPairError = pair.try_token0().reverted || pair.try_token1().reverted
+    if(tryPairError==false){
+        bond.token0 = pair.token0().toHexString()
+        bond.token1 = pair.token1().toHexString()
+    
+        let token0erc20 = ERC20.bind(pair.token0())
+        let token1erc20 = ERC20.bind(pair.token1())
+        bond.name = token0erc20.symbol() + "-" + token1erc20.symbol()
+        bond.type = "LP"
+        bond.save()
+
+        CustomBond.create(Address.fromString(bond.id))
         return
     }
 
-    bond.token0 = pair.token0().toHexString()
-    bond.token1 = pair.token1().toHexString()
+    let erc20 = ERC20.bind(Address.fromString(principleToken))
+    let tryERC20 = erc20.try_symbol().reverted
+    if(tryERC20==false){
+        bond.token0 = principleToken
+        bond.token1 = ""
+    
+        let token0erc20 = ERC20.bind(Address.fromString(principleToken))
+        bond.name = token0erc20.symbol()
+        bond.type = "ERC20"
+        bond.save()
 
-    let token0erc20 = ERC20.bind(pair.token0())
-    let token1erc20 = ERC20.bind(pair.token1())
-    bond.name = token0erc20.symbol() + "-" + token1erc20.symbol()
+        CustomBond.create(Address.fromString(bond.id))
+        return
+    }
 
-    bond.save()
+    log.error("Error bond {} principle token {}", [id, principleToken])
 }

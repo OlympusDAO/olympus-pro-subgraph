@@ -113,4 +113,121 @@ export class Bond extends Entity {
   set fees(value: BigDecimal) {
     this.set("fees", Value.fromBigDecimal(value));
   }
+
+  get type(): string {
+    let value = this.get("type");
+    return value.toString();
+  }
+
+  set type(value: string) {
+    this.set("type", Value.fromString(value));
+  }
+}
+
+export class UserBond extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id !== null, "Cannot save UserBond entity without an ID");
+    assert(
+      id.kind == ValueKind.STRING,
+      "Cannot save UserBond entity with non-string ID. " +
+        'Considering using .toHex() to convert the "id" to a string.'
+    );
+    store.set("UserBond", id.toString(), this);
+  }
+
+  static load(id: string): UserBond | null {
+    return store.get("UserBond", id) as UserBond | null;
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get bond(): string {
+    let value = this.get("bond");
+    return value.toString();
+  }
+
+  set bond(value: string) {
+    this.set("bond", Value.fromString(value));
+  }
+
+  get deposit(): BigDecimal | null {
+    let value = this.get("deposit");
+    if (value === null || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigDecimal();
+    }
+  }
+
+  set deposit(value: BigDecimal | null) {
+    if (value === null) {
+      this.unset("deposit");
+    } else {
+      this.set("deposit", Value.fromBigDecimal(value as BigDecimal));
+    }
+  }
+
+  get payout(): BigDecimal | null {
+    let value = this.get("payout");
+    if (value === null || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigDecimal();
+    }
+  }
+
+  set payout(value: BigDecimal | null) {
+    if (value === null) {
+      this.unset("payout");
+    } else {
+      this.set("payout", Value.fromBigDecimal(value as BigDecimal));
+    }
+  }
+
+  get depositUSD(): BigDecimal | null {
+    let value = this.get("depositUSD");
+    if (value === null || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigDecimal();
+    }
+  }
+
+  set depositUSD(value: BigDecimal | null) {
+    if (value === null) {
+      this.unset("depositUSD");
+    } else {
+      this.set("depositUSD", Value.fromBigDecimal(value as BigDecimal));
+    }
+  }
+
+  get payoutUSD(): BigDecimal | null {
+    let value = this.get("payoutUSD");
+    if (value === null || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigDecimal();
+    }
+  }
+
+  set payoutUSD(value: BigDecimal | null) {
+    if (value === null) {
+      this.unset("payoutUSD");
+    } else {
+      this.set("payoutUSD", Value.fromBigDecimal(value as BigDecimal));
+    }
+  }
 }

@@ -7,7 +7,7 @@ dataSources:
     network: mainnet
     source:
       address: "0xb1F69deCb09D8490E3872FE26D27a7b83493cd65"
-      startBlock: 13280003
+      startBlock: 13280000
       abi: OlympusProFactory
     mapping:
       kind: ethereum/events
@@ -22,9 +22,37 @@ dataSources:
           file: ./abis/ERC20.json
         - name: UniswapV2Pair
           file: ./abis/UniswapV2Pair.json
+        - name: UniswapRouter
+          file: ./abis/UniswapRouter.json
       callHandlers:
         - function: createBond(address,address,address,address,uint256[],uint256[])
           handler: createBond
         - function: createBondAndTreasury(address,address,address,uint256[],uint256[])
           handler: createBondAndTreasury
       file: ./src/OPFactory.ts
+templates:
+  - name: CustomBond
+    kind: ethereum/contract
+    network: mainnet
+    source:
+      abi: CustomBond
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      entities:
+        - Bond
+        - DailyBond
+      file: ./src/CustomBond.ts
+      abis:
+        - name: CustomBond
+          file: ./abis/CustomBond.json
+        - name: ERC20
+          file: ./abis/ERC20.json
+        - name: UniswapV2Pair
+          file: ./abis/UniswapV2Pair.json
+        - name: UniswapRouter
+          file: ./abis/UniswapRouter.json
+      eventHandlers:
+        - event: BondCreated(uint256,uint256,uint256)
+          handler: handleBondCreated

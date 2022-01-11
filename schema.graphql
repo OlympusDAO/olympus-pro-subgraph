@@ -8,4 +8,14 @@ type Bond @entity {
   principleToken: String!
   payoutToken: String!
   fees: BigDecimal!
+  type: String!
+}
+
+type UserBond @entity {
+  id: ID!
+  bond: Bond!
+  deposit: BigDecimal
+  payout: BigDecimal
+  depositUSD: BigDecimal
+  payoutUSD: BigDecimal
 }
